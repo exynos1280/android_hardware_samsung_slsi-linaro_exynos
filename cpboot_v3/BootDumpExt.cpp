@@ -325,18 +325,29 @@ int BootDumpExt::shannon_normal_boot()
 {
 	int ret;
 
+#ifndef LEGACY_SIPC_IOCTL
 	cbd_info("Power on CP\n");
 	ret = std_boot_power_on();
 	if (ret < 0) {
 		cbd_info("ERR! std_boot_power_on fail\n");
 		goto exit;
 	}
+#endif
 
 #ifndef LEGACY_SIPC_IOCTL
 	cbd_info("Load CP bootloader\n");
 	ret = std_boot_load_cp_bootloader();
 	if (ret < 0) {
 		cbd_info("ERR! std_boot_load_cp_image fail\n");
+		goto exit;
+	}
+#endif
+
+#ifdef LEGACY_SIPC_IOCTL
+	cbd_info("Power on CP\n");
+	ret = std_boot_power_on();
+	if (ret < 0) {
+		cbd_info("ERR! std_boto_power_on fail\n");
 		goto exit;
 	}
 #endif
